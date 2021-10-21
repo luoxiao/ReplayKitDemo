@@ -1,16 +1,20 @@
 PODS:
   - SnapKit (5.0.1)
+  - Toaster (2.3.0)
 
 DEPENDENCIES:
   - SnapKit
+  - Toaster
 
 SPEC REPOS:
   trunk:
     - SnapKit
+    - Toaster
 
 SPEC CHECKSUMS:
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
+  Toaster: c3473963c78e8cabbf6ea6f11ad0fdaae6f54987
 
-PODFILE CHECKSUM: 835a405f753d1781727f1bf4df099d94c829437d
+PODFILE CHECKSUM: a99a1f789381f586db7b5963396bf6b3656e2427
 
 COCOAPODS: 1.10.1

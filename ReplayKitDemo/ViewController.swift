@@ -18,6 +18,7 @@ class ViewController: UIViewController {
         
         initUI()
         initConfig()
+        initNotifcation()
     }
 
         
@@ -87,6 +88,9 @@ class ViewController: UIViewController {
         RPScreenRecorder.shared().isMicrophoneEnabled = true
     }
     
+    func initNotifcation() {
+        NotificationCenter.default.addObserver(self, selector: #selector(didPlayToEndTime), name: .AVPlayerItemDidPlayToEndTime, object: nil)
+    }
 }
 
 
@@ -131,6 +135,11 @@ extension ViewController {
         }
     }
     
+    
+    @objc func didPlayToEndTime() {
+        player.player?.seek(to: .zero)
+        player.player?.play()
+    }
 }
 
 
@@ -163,7 +172,7 @@ extension ViewController: RPPreviewViewControllerDelegate {
         
         debugPrint(activityTypes)
         if activityTypes.contains("com.apple.UIKit.activity.SaveToCameraRoll") {
-            debugPrint("成功保存到相册")
+            Toast(text: "成功保存到相册").show()
         }
     }
 }
