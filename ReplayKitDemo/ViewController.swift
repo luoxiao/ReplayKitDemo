@@ -12,6 +12,9 @@ class ViewController: UIViewController {
 
     var previewController: RPPreviewViewController?
     
+    var activityViewController: RPBroadcastActivityViewController?
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -40,6 +43,16 @@ class ViewController: UIViewController {
         b.backgroundColor = .black
         b.layer.cornerRadius = 5
         b.addTarget(self, action: #selector(exitAction), for: .touchUpInside)
+        return b
+    }()
+    
+    lazy var activityButton: UIButton = {
+        let b = UIButton(type: .system)
+        b.setTitle("activity", for: .normal)
+        b.setTitleColor(.white, for: .normal)
+        b.backgroundColor = .black
+        b.layer.cornerRadius = 5
+        b.addTarget(self, action: #selector(activityAction), for: .touchUpInside)
         return b
     }()
     
@@ -79,7 +92,11 @@ class ViewController: UIViewController {
             make.top.equalTo(startButton.snp.bottom).offset(80)
         }
         
-        
+        view.addSubview(activityButton)
+        activityButton.snp.makeConstraints { make in
+            make.size.centerX.equalTo(startButton)
+            make.top.equalTo(exitButton.snp.bottom).offset(80)
+        }
     }
     
     
@@ -117,6 +134,7 @@ extension ViewController {
         RPScreenRecorder.shared().startRecording { error in
             debugPrint(error)
         }
+        
 
     }
     
@@ -135,13 +153,29 @@ extension ViewController {
         }
     }
     
+    @objc func activityAction() {
+        RPBroadcastActivityViewController.load { activityCtr, error in
+            if let act = activityCtr {
+                self.activityViewController = act
+                act.delegate = self
+                act.view.backgroundColor = .white
+                self.present(act, animated: true, completion: nil)
+            }
+            
+        }
+    }
+
+}
+
+
+extension ViewController {
     
     @objc func didPlayToEndTime() {
         player.player?.seek(to: .zero)
         player.player?.play()
     }
+    
 }
-
 
 extension ViewController: RPScreenRecorderDelegate {
     
@@ -175,4 +209,19 @@ extension ViewController: RPPreviewViewControllerDelegate {
             Toast(text: "成功保存到相册").show()
         }
     }
+}
+
+
+extension ViewController: RPBroadcastActivityViewControllerDelegate {
+    
+    func broadcastActivityViewController(_ broadcastActivityViewController: RPBroadcastActivityViewController, didFinishWith broadcastController: RPBroadcastController?, error: Error?) {
+        
+        debugPrint(error)
+        DispatchQueue.main.async {
+            broadcastActivityViewController.dismiss(animated: true) {
+                self.activityViewController = nil
+            }
+        }
+    }
+    
 }
